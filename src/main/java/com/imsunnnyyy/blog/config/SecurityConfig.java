@@ -32,15 +32,15 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         BlogUserDetailsService blogUserDetailsService = new BlogUserDetailsService(userRepository);
 
-        String email = "user@test.com";
+        String email = "user2@test.com";
 
         // Avoid duplicate creation on every startup
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isEmpty()) {
             User newUser = User.builder()
-                    .name("Test User")
+                    .name("Test User2")
                     .email(email)
-                    .password(passwordEncoder().encode("password"))
+                    .password(passwordEncoder().encode("Test@123"))
                     .build();
             userRepository.save(newUser);
         }
