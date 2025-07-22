@@ -31,15 +31,12 @@ public class SecurityConfig {
         BlogUserDetailsService blogUserDetailsService = new BlogUserDetailsService(userRepository);
 
         String email = "user@test.com";
-        userRepository.findByEmail(email).orElseGet(() -> {
-            User newUser = User.builder()
-                    .name("Test User")
-                    .email(email)
-                    .password(passwordEncoder().encode("password"))
-                    .build();
-            return userRepository.save(newUser);
-        });
-
+        User newUser = User.builder()
+                .name("Test User")
+                .email(email)
+                .password(passwordEncoder().encode("password")) // password will be 'password'
+                .build();
+        userRepository.save(newUser);
         return blogUserDetailsService;
     }
 
