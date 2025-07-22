@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.Optional;
+
 @Configuration
 public class SecurityConfig {
 
@@ -31,12 +33,18 @@ public class SecurityConfig {
         BlogUserDetailsService blogUserDetailsService = new BlogUserDetailsService(userRepository);
 
         String email = "user@test.com";
-        User newUser = User.builder()
-                .name("Test User")
-                .email(email)
-                .password(passwordEncoder().encode("password")) // password will be 'password'
-                .build();
-        userRepository.save(newUser);
+
+        // Avoid duplicate creation on every startup
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isEmpty()) {
+            User newUser = User.builder()
+                    .name("Test User")
+                    .email(email)
+                    .password(passwordEncoder().encode("password"))
+                    .build();
+            userRepository.save(newUser);
+        }
+
         return blogUserDetailsService;
     }
 
