@@ -1,14 +1,22 @@
-# official OpenJDK 21 image
-FROM openjdk:21-jdk-slim
+# ---------- Stage 1: Build ----------
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 
-# Set working directory inside container
 WORKDIR /app
 
-# Copy the JAR file from target folder to container
-COPY target/*.jar app.jar
+# Copy the entire blog source code
+COPY . .
 
-# Expose Spring Boot default port
+# Build the JAR using Maven
+RUN mvn clean package -DskipTests
+
+# ---------- Stage 2: Run ----------
+FROM openjdk:21-jdk-slim
+
+WORKDIR /app
+
+# Copy the built JAR from Stage 1
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Run the jar file when container starts
 ENTRYPOINT ["java", "-jar", "app.jar"]
