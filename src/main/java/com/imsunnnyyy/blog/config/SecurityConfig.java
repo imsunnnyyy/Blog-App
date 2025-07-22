@@ -54,11 +54,31 @@ public class SecurityConfig {
             JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        // Public login
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/posts/drafts").authenticated()
+
+                        // Public GET access
                         .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/tags/**").permitAll()
+
+                        // Authenticated for non-GET endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/v1/categories/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/categories/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**").authenticated()
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/posts/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/posts/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/posts/**").authenticated()
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/tags/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/tags/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/tags/**").authenticated()
+
+                        // Authenticated for drafts
+                        .requestMatchers(HttpMethod.GET, "/api/v1/posts/drafts").authenticated()
+
+                        // Everything else
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
