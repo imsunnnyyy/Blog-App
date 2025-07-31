@@ -3,6 +3,8 @@
 This is the backend API for a Blog Application, built with **Spring Boot**, **PostgreSQL**, **JWT Authentication**, and deployed on **Railway**. It supports user login, post and category management, and tag features with secure endpoints.
 
 > 🔗 Deployed at: [https://blog-app-backend.up.railway.app](https://blog-app-backend.up.railway.app)
+>
+Use Postman to test the api
 
 ---
 
